@@ -1,0 +1,95 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-icon">🌾</span>
+      <h1 class="auth-title">Farmer Registration</h1>
+      <p class="auth-subtitle">Join IrrigaShield to protect your crops against water deficit</p>
+    </div>
+
+    <div *ngIf="error$ | async as error" class="auth-error-alert">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input 
+          id="name" 
+          type="text" 
+          class="form-control" 
+          formControlName="name"
+          placeholder="e.g. Ramesh Kumar"
+          [class.is-invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+        />
+        <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.errors" class="form-error">
+          <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required.</span>
+          <span *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          id="email" 
+          type="email" 
+          class="form-control" 
+          formControlName="email"
+          placeholder="name@example.com"
+          [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+        />
+        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors" class="form-error">
+          <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="registerForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          id="password" 
+          type="password" 
+          class="form-control" 
+          formControlName="password"
+          placeholder="Min 8 chars, 1 uppercase, 1 lowercase, 1 number"
+          [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+        />
+        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.errors" class="form-error">
+          <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</span>
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</span>
+          <span *ngIf="registerForm.get('password')?.errors?.['pattern']">Must include 1 uppercase, 1 lowercase, and 1 number.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          id="confirmPassword" 
+          type="password" 
+          class="form-control" 
+          formControlName="confirmPassword"
+          placeholder="Re-enter your password"
+          [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+        />
+        <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors" class="form-error">
+          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password.</span>
+          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match.</span>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-lg w-full"
+        [disabled]="(loading$ | async) || registerForm.invalid"
+      >
+        <span *ngIf="loading$ | async">Creating Account...</span>
+        <span *ngIf="!(loading$ | async)">Create Farmer Account</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a routerLink="/auth/login">Sign in here</a>
+    </div>
+  </div>
+</div>
+

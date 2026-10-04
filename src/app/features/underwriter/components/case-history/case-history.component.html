@@ -1,0 +1,47 @@
+﻿<div class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Underwriting Decision History</h1>
+      <p class="page-subtitle">Archive of approved and rejected insurance applications</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Reviewed Cases</h2>
+    </div>
+    <div class="card-body">
+      <ng-container *ngIf="cases$ | async as cases">
+        <div class="table-responsive" *ngIf="cases.length; else noCases">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Case ID</th>
+                <th>App ID</th>
+                <th>Farmer Email</th>
+                <th>Plan Name</th>
+                <th>Decision</th>
+                <th>Score</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of cases">
+                <td>#CASE-{{ c.caseId }}</td>
+                <td>#{{ c.applicationId }}</td>
+                <td>{{ c.farmerEmail }}</td>
+                <td>{{ c.planName }}</td>
+                <td><span [appStatusBadge]="c.decision || c.applicationStatus">{{ c.decision || c.applicationStatus }}</span></td>
+                <td><strong>{{ c.overallRiskScore }}/100</strong></td>
+                <td>{{ c.remarks }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noCases>
+          <div class="empty-state">No cases reviewed yet.</div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

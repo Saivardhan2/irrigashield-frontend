@@ -1,0 +1,12 @@
+﻿.plan-card { display: flex; flex-direction: column; justify-content: space-between; }
+.plan-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem; min-height: 48px; }
+.coverage-range {
+  display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;
+  .range-item { display: flex; flex-direction: column; .range-label { font-size: 0.75rem; color: var(--text-muted); } .range-val { font-size: 1rem; font-weight: 700; color: var(--primary-800); } }
+  .range-divider { color: var(--text-light); }
+}
+.plan-metrics {
+  display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;
+  .metric-row { display: flex; justify-content: space-between; color: var(--text-main); }
+}
+.w-full { width: 100%; }

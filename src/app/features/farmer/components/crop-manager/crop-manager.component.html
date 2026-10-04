@@ -1,0 +1,88 @@
+﻿<div class="crop-section">
+  <div class="crop-header flex justify-between items-center">
+    <h3 class="crop-title">Cultivated Crop Cycles</h3>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? 'Cancel' : '+ Add Crop Cycle' }}
+    </button>
+  </div>
+
+  <div *ngIf="showAddForm" class="add-crop-card card">
+    <form [formGroup]="cropForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="cropType">Crop Type *</label>
+          <input id="cropType" type="text" class="form-control" formControlName="cropType" placeholder="Sugarcane" />
+        </div>
+        <div class="form-group">
+          <label for="variety">Variety *</label>
+          <input id="variety" type="text" class="form-control" formControlName="variety" placeholder="Co 86032" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="sowingDate">Sowing Date *</label>
+          <input id="sowingDate" type="date" class="form-control" formControlName="sowingDate" />
+        </div>
+        <div class="form-group">
+          <label for="expectedHarvestDate">Harvest Date *</label>
+          <input id="expectedHarvestDate" type="date" class="form-control" formControlName="expectedHarvestDate" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="growthStage">Growth Stage *</label>
+          <select id="growthStage" class="form-control" formControlName="growthStage">
+            <option *ngFor="let s of growthStages" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="irrigationRequirement">Water Need *</label>
+          <select id="irrigationRequirement" class="form-control" formControlName="irrigationRequirement">
+            <option *ngFor="let r of irrigationReqs" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-1">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="showAddForm = false">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="cropForm.invalid">Save Crop</button>
+      </div>
+    </form>
+  </div>
+
+  <ng-container *ngIf="cropsMap$ | async as cropsMap">
+    <div *ngIf="cropsMap[farmId]?.length; else noCrops" class="table-responsive mt-2">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Variety</th>
+            <th>Sowing</th>
+            <th>Harvest</th>
+            <th>Stage</th>
+            <th>Water Need</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let crop of cropsMap[farmId]">
+            <td>#{{ crop.cropId }}</td>
+            <td><strong>{{ crop.cropType }}</strong></td>
+            <td>{{ crop.variety }}</td>
+            <td>{{ crop.sowingDate }}</td>
+            <td>{{ crop.expectedHarvestDate }}</td>
+            <td><span class="badge badge-info">{{ crop.growthStage }}</span></td>
+            <td>{{ crop.irrigationRequirement }}</td>
+            <td><span [appStatusBadge]="crop.status">{{ crop.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noCrops>
+      <div class="empty-state">No crops logged yet.</div>
+    </ng-template>
+  </ng-container>
+</div>

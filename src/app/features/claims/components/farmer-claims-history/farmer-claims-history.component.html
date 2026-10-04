@@ -1,0 +1,55 @@
+﻿<div class="page-container">
+  <div class="card">
+    <div class="card-header flex justify-between items-center">
+      <div>
+        <h2 class="card-title">Parametric Protection & Claims History</h2>
+        <p class="text-muted">Instant parametric disbursements triggered directly by IoT telemetry.</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading$ | async" class="text-center py-4">
+        <p class="text-muted">Loading claim history...</p>
+      </div>
+
+      <div *ngIf="!(loading$ | async) && (claims$ | async)?.length === 0" class="empty-state text-center py-8">
+        <p class="text-muted">No claims recorded yet. When irrigation deficits cross parametric thresholds, payouts will appear here automatically.</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="(claims$ | async)?.length">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Policy ID</th>
+              <th>Trigger Reason</th>
+              <th>Payout Slab</th>
+              <th>Payout Amount</th>
+              <th>Status</th>
+              <th>Settled Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of (claims$ | async)">
+              <td>#{{ c.claimId }}</td>
+              <td>#{{ c.policyId }}</td>
+              <td>
+                <strong>{{ c.triggerEvent }}</strong>
+                <div class="text-sm text-muted" *ngIf="c.remarks">{{ c.remarks }}</div>
+              </td>
+              <td>{{ c.payoutPercentage }}%</td>
+              <td class="font-bold text-success">â‚¹{{ c.payoutAmount | number:'1.2-2' }}</td>
+              <td><span [appStatusBadge]="c.status">{{ c.status }}</span></td>
+              <td>{{ c.settledAt ? (c.settledAt | date:'medium') : 'Processing' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <app-claim-alert-dialog
+    *ngIf="alertClaim$ | async as alert"
+    [claim]="alert"
+    (close)="dismissAlert()">
+  </app-claim-alert-dialog>
+</div>

@@ -1,0 +1,17 @@
+<div class="toast-container" *ngIf="(notifications$ | async)?.length">
+  <div 
+    *ngFor="let n of notifications$ | async" 
+    class="toast-alert" 
+    [ngClass]="'toast-' + n.type"
+  >
+    <div class="toast-icon">
+      <span *ngIf="n.type === 'success'">✔</span>
+      <span *ngIf="n.type === 'error'">✖</span>
+      <span *ngIf="n.type === 'warning'">⚠</span>
+      <span *ngIf="n.type === 'info'">ℹ</span>
+    </div>
+    <div class="toast-message">{{ n.message }}</div>
+    <button type="button" class="toast-close" (click)="dismiss(n.id)" aria-label="Close notification">×</button>
+  </div>
+</div>
+

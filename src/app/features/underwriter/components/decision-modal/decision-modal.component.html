@@ -1,0 +1,38 @@
+﻿<div class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="modal-title">
+        {{ decisionType === 'APPROVE' ? 'Approve Insurance Policy' : 'Reject Application' }} #{{ applicationId }}
+      </h3>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="close()">Ã—</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="decisionForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-group">
+          <label for="remarks">Mandatory Underwriter Remarks *</label>
+          <textarea 
+            id="remarks" 
+            rows="4" 
+            class="form-control" 
+            formControlName="remarks"
+            placeholder="Document risk evaluation rationale, equipment status, and policy decision details..."
+            [class.is-invalid]="decisionForm.get('remarks')?.touched && decisionForm.get('remarks')?.invalid"
+          ></textarea>
+          <div *ngIf="decisionForm.get('remarks')?.touched && decisionForm.get('remarks')?.invalid" class="form-error">
+            Remarks are mandatory (minimum 5 characters).
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+          <button 
+            type="submit" 
+            [class]="decisionType === 'APPROVE' ? 'btn btn-primary' : 'btn btn-danger'"
+            [disabled]="decisionForm.invalid"
+          >
+            Confirm {{ decisionType === 'APPROVE' ? 'Approval' : 'Rejection' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

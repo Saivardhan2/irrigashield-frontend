@@ -1,0 +1,63 @@
+﻿<div class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Insurance Policies & Quotes</h1>
+      <p class="page-subtitle">Track active drought protection policies and review newly approved underwriting quotes</p>
+    </div>
+    <div>
+      <a routerLink="/farmer/plans" class="btn btn-primary">+ Explore Plans</a>
+    </div>
+  </div>
+
+  <ng-container *ngIf="applications$ | async as apps">
+    <div *ngFor="let app of apps">
+      <app-quote-acceptance 
+        *ngIf="app.status === 'APPROVED'" 
+        [applicationId]="app.applicationId"
+      ></app-quote-acceptance>
+    </div>
+  </ng-container>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Enrolled Insurance Policies</h2>
+      <a routerLink="/claims/history" class="btn btn-secondary btn-sm">View Payout History</a>
+    </div>
+    <div class="card-body">
+      <ng-container *ngIf="policies$ | async as policies">
+        <div class="table-responsive" *ngIf="policies.length; else noPolicies">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Policy ID</th>
+                <th>Plan Name</th>
+                <th>Coverage Amount</th>
+                <th>Premium Paid</th>
+                <th>Policy Period</th>
+                <th>Payment</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pol of policies">
+                <td><strong>#POL-{{ pol.policyId }}</strong></td>
+                <td>{{ pol.planName }}</td>
+                <td><strong class="text-primary">â‚¹{{ pol.coverageAmount | number }}</strong></td>
+                <td>â‚¹{{ pol.premiumAmount | number }}</td>
+                <td>{{ pol.startDate }} to {{ pol.endDate }}</td>
+                <td><span class="badge badge-success">{{ pol.paymentStatus }}</span></td>
+                <td><span [appStatusBadge]="pol.status">{{ pol.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noPolicies>
+          <div class="empty-state">
+            <p>You do not have any active insurance policies yet.</p>
+            <a routerLink="/farmer/plans" class="btn btn-primary btn-sm mt-2">Subscribe to a Plan</a>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

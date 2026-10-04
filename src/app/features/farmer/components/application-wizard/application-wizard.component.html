@@ -1,0 +1,134 @@
+﻿<div class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Policy Applications & Enrollment</h1>
+      <p class="page-subtitle">Draft and submit parametric insurance applications for underwriting assessment</p>
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary" (click)="showNewAppForm = !showNewAppForm">
+        {{ showNewAppForm ? 'Close Wizard' : '+ New Application' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showNewAppForm" class="card wizard-card mb-4">
+    <div class="card-header">
+      <h2 class="card-title">Apply for Parametric Protection</h2>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="showNewAppForm = false">Cancel</button>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="appForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="grid grid-cols-3">
+          <div class="form-group">
+            <label for="planId">1. Select Protection Plan *</label>
+            <select id="planId" class="form-control" formControlName="planId">
+              <option [ngValue]="null">-- Choose Plan --</option>
+              <option *ngFor="let p of plans$ | async" [value]="p.planId">
+                {{ p.planName }} (â‚¹{{ p.minimumCoverage | number }} - â‚¹{{ p.maximumCoverage | number }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="farmId">2. Select Farm Plot *</label>
+            <select id="farmId" class="form-control" formControlName="farmId">
+              <option [ngValue]="null">-- Choose Farm Plot --</option>
+              <option *ngFor="let f of farms$ | async" [value]="f.farmId">
+                {{ f.farmName }} ({{ f.village }}, {{ f.areaInAcres }} Acres)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group" *ngIf="appForm.get('farmId')?.value as selectedFarmId">
+            <label for="cropId">3. Select Crop Cycle *</label>
+            <ng-container *ngIf="cropsMap$ | async as cropsMap">
+              <select id="cropId" class="form-control" formControlName="cropId">
+                <option [ngValue]="null">-- Choose Crop --</option>
+                <option *ngFor="let c of cropsMap[selectedFarmId]" [value]="c.cropId">
+                  {{ c.cropType }} - {{ c.variety }} ({{ c.growthStage }})
+                </option>
+              </select>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3">
+          <div class="form-group">
+            <label for="requestedCoverage">Requested Coverage Amount (â‚¹) *</label>
+            <input id="requestedCoverage" type="number" step="1000" class="form-control" formControlName="requestedCoverage" />
+          </div>
+          <div class="form-group">
+            <label for="proposedStartDate">Coverage Start Date *</label>
+            <input id="proposedStartDate" type="date" class="form-control" formControlName="proposedStartDate" />
+          </div>
+          <div class="form-group">
+            <label for="proposedEndDate">Coverage End Date *</label>
+            <input id="proposedEndDate" type="date" class="form-control" formControlName="proposedEndDate" />
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-secondary" (click)="showNewAppForm = false">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="appForm.invalid">Save Application Draft</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">My Insurance Applications</h2>
+    </div>
+    <div class="card-body">
+      <ng-container *ngIf="applications$ | async as apps">
+        <div class="table-responsive" *ngIf="apps.length; else noApps">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Plan Name</th>
+                <th>Farm ID</th>
+                <th>Crop ID</th>
+                <th>Coverage</th>
+                <th>Proposed Term</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let app of apps">
+                <td>#{{ app.applicationId }}</td>
+                <td><strong>{{ app.planName || 'Plan #' + app.planId }}</strong></td>
+                <td>Plot #{{ app.farmId }}</td>
+                <td>Crop #{{ app.cropId }}</td>
+                <td>â‚¹{{ app.requestedCoverage | number }}</td>
+                <td>{{ app.proposedStartDate }} to {{ app.proposedEndDate }}</td>
+                <td><span [appStatusBadge]="app.status">{{ app.status }}</span></td>
+                <td>
+                  <button 
+                    *ngIf="app.status === 'DRAFT'" 
+                    type="button" 
+                    class="btn btn-primary btn-sm"
+                    (click)="submitForReview(app.applicationId)"
+                  >
+                    Submit for Review
+                  </button>
+                  <a 
+                    *ngIf="app.status === 'APPROVED'" 
+                    [routerLink]="['/farmer/policies']" 
+                    class="btn btn-secondary btn-sm"
+                  >
+                    Review Quote
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noApps>
+          <div class="empty-state">No applications found.</div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

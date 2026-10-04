@@ -1,0 +1,13 @@
+﻿.stat-grid { margin-bottom: 2rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1.5rem; }
+.policy-item, .app-item {
+  display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 0; border-bottom: 1px solid var(--border-color);
+  &:last-child { border-bottom: none; }
+  .policy-info, .app-info { display: flex; flex-direction: column; }
+  .policy-title, .app-title { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+  .policy-period, .app-coverage { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .policy-meta, .app-meta { display: flex; align-items: center; gap: 0.75rem; }
+  .coverage-amount { font-weight: 700; color: var(--primary-800); font-size: 1rem; }
+}
+.empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.95rem; }

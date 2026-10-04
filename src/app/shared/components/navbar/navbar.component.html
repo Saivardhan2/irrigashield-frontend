@@ -1,0 +1,76 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="brand-section">
+      <a routerLink="/" class="brand-link">
+        <span class="brand-icon">🌱</span>
+        <div class="brand-text">
+          <span class="brand-name">IrrigaShield</span>
+          <span class="brand-tagline">Parametric Crop Insurance</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Navigation links when authenticated -->
+    <nav class="nav-links" *ngIf="isAuthenticated$ | async" [class.mobile-open]="mobileMenuOpen">
+      <!-- FARMER links -->
+      <ng-container *ngIf="(userRole$ | async) === 'FARMER'">
+        <a routerLink="/farmer/dashboard" routerLinkActive="active" (click)="mobileMenuOpen = false">Dashboard</a>
+        <a routerLink="/farmer/profile" routerLinkActive="active" (click)="mobileMenuOpen = false">KYC Profile</a>
+        <a routerLink="/farmer/farms" routerLinkActive="active" (click)="mobileMenuOpen = false">My Farms</a>
+        <a routerLink="/farmer/plans" routerLinkActive="active" (click)="mobileMenuOpen = false">Insurance Plans</a>
+        <a routerLink="/farmer/applications" routerLinkActive="active" (click)="mobileMenuOpen = false">Applications</a>
+        <a routerLink="/farmer/policies" routerLinkActive="active" (click)="mobileMenuOpen = false">Policies</a>
+        <a routerLink="/claims/history" routerLinkActive="active" (click)="mobileMenuOpen = false">Claims</a>
+      </ng-container>
+
+      <!-- UNDERWRITER links -->
+      <ng-container *ngIf="(userRole$ | async) === 'UNDERWRITER'">
+        <a routerLink="/underwriter/queue" routerLinkActive="active" (click)="mobileMenuOpen = false">Pending Queue</a>
+      </ng-container>
+
+      <!-- DATA PROVIDER links -->
+      <ng-container *ngIf="(userRole$ | async) === 'DATA_PROVIDER'">
+        <a routerLink="/claims/simulator" routerLinkActive="active" (click)="mobileMenuOpen = false">Sensor Simulator</a>
+      </ng-container>
+
+      <!-- ADMIN links -->
+      <ng-container *ngIf="(userRole$ | async) === 'ADMIN'">
+        <a routerLink="/admin/users" routerLinkActive="active" (click)="mobileMenuOpen = false">Users</a>
+        <a routerLink="/admin/plans" routerLinkActive="active" (click)="mobileMenuOpen = false">Plan Builder</a>
+        <a routerLink="/underwriter/queue" routerLinkActive="active" (click)="mobileMenuOpen = false">Underwriting</a>
+        <a routerLink="/claims/simulator" routerLinkActive="active" (click)="mobileMenuOpen = false">Sensor Telemetry</a>
+      </ng-container>
+    </nav>
+
+    <!-- Right User actions -->
+    <div class="user-actions">
+      <ng-container *ngIf="isAuthenticated$ | async; else unauthenticatedTpl">
+        <div class="user-profile-badge" *ngIf="currentUser$ | async as user">
+          <div class="user-details">
+            <span class="user-name">{{ user.name }}</span>
+            <span [appStatusBadge]="user.role" class="badge-role">{{ user.role }}</span>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="logout()">Sign Out</button>
+        </div>
+      </ng-container>
+      <ng-template #unauthenticatedTpl>
+        <div class="auth-buttons">
+          <a routerLink="/auth/login" class="btn btn-secondary btn-sm">Login</a>
+          <a routerLink="/auth/register" class="btn btn-primary btn-sm">Farmer Register</a>
+        </div>
+      </ng-template>
+
+      <!-- Mobile hamburger toggle -->
+      <button 
+        type="button" 
+        class="mobile-toggle-btn" 
+        (click)="toggleMobileMenu()" 
+        *ngIf="isAuthenticated$ | async"
+        aria-label="Toggle navigation"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+</header>
+

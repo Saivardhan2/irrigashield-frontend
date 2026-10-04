@@ -1,0 +1,80 @@
+﻿<div class="page-container">
+  <div class="card mb-4">
+    <div class="card-header flex justify-between items-center">
+      <div>
+        <h2 class="card-title">User & Role Provisioning</h2>
+        <p class="text-muted">Provision underwriters, data providers, and system operators.</p>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="toggleForm()">
+        {{ showForm ? 'Cancel' : '+ Provision New User' }}
+      </button>
+    </div>
+
+    <div class="card-body" *ngIf="showForm">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="userName">Full Name *</label>
+            <input id="userName" type="text" formControlName="name" class="form-control" placeholder="e.g. Neha Underwriter" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="userEmail">Email Address *</label>
+            <input id="userEmail" type="email" formControlName="email" class="form-control" placeholder="user@irrigashield.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="userPassword">Initial Password *</label>
+            <input id="userPassword" type="password" formControlName="password" class="form-control" placeholder="At least 8 characters" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="userRole">Assigned Role *</label>
+            <select id="userRole" formControlName="role" class="form-control">
+              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Save & Activate</button>
+          <button type="button" class="btn btn-outline" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Platform Users</h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading$ | async" class="text-center py-4">
+        <p class="text-muted">Loading user accounts...</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="!(loading$ | async)">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of (users$ | async)">
+              <td>#{{ u.userId }}</td>
+              <td><strong>{{ u.name }}</strong></td>
+              <td>{{ u.email }}</td>
+              <td><span [appStatusBadge]="u.role">{{ u.role }}</span></td>
+              <td><span [appStatusBadge]="u.status">{{ u.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

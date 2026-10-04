@@ -1,0 +1,66 @@
+﻿<div class="page-container">
+  <div class="card mb-4">
+    <div class="card-header flex justify-between items-center">
+      <div>
+        <h2 class="card-title">Payout Slab Calibrator (Trigger Rule #{{ triggerRuleId }})</h2>
+        <p class="text-muted">Define stepped payout percentages mapped directly to deficit duration brackets.</p>
+      </div>
+      <a routerLink="/admin/plans" class="btn btn-outline">&larr; Back to Plans</a>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="slabForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="minDuration">Min Deficit Duration (Hours) *</label>
+            <input id="minDuration" type="number" formControlName="minimumDurationHours" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="maxDuration">Max Deficit Duration (Hours) *</label>
+            <input id="maxDuration" type="number" formControlName="maximumDurationHours" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payoutPct">Payout Percentage (%) *</label>
+            <input id="payoutPct" type="number" step="0.5" formControlName="payoutPercentage" class="form-control" />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary" [disabled]="slabForm.invalid">Add Payout Slab</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Configured Payout Slabs</h3>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Slab ID</th>
+              <th>Min Duration</th>
+              <th>Max Duration</th>
+              <th>Payout Percentage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of (slabs$ | async)">
+              <td>#{{ s.payoutSlabId }}</td>
+              <td>{{ s.minimumDurationHours }} hrs</td>
+              <td>{{ s.maximumDurationHours }} hrs</td>
+              <td class="font-bold text-success">{{ s.payoutPercentage }}%</td>
+              <td><span [appStatusBadge]="s.status">{{ s.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

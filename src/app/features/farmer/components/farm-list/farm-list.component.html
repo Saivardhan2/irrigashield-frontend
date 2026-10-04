@@ -1,0 +1,67 @@
+﻿<div class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Registered Farms</h1>
+      <p class="page-subtitle">Manage land plots, crops, and telemetry-connected irrigation systems</p>
+    </div>
+    <div>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="showCreateFarm = !showCreateFarm"
+      >
+        {{ showCreateFarm ? 'Close Form' : '+ Register New Farm' }}
+      </button>
+    </div>
+  </div>
+
+  <app-farm-form 
+    *ngIf="showCreateFarm" 
+    (formCancelled)="showCreateFarm = false" 
+    (farmSaved)="showCreateFarm = false"
+  ></app-farm-form>
+
+  <ng-container *ngIf="farms$ | async as farms">
+    <div class="grid grid-cols-3 farm-grid" *ngIf="farms.length; else noFarms">
+      <div 
+        *ngFor="let farm of farms" 
+        class="card card-clickable farm-card"
+        [class.selected-farm]="(selectedFarmId$ | async) === farm.farmId"
+        (click)="selectFarm(farm.farmId)"
+      >
+        <div class="card-header">
+          <h3 class="card-title">{{ farm.farmName }}</h3>
+          <span [appStatusBadge]="farm.status">{{ farm.status }}</span>
+        </div>
+        <div class="card-body">
+          <p><strong>Survey No:</strong> {{ farm.surveyNumber }}</p>
+          <p>{{ farm.village }}, {{ farm.district }} ({{ farm.state }})</p>
+          <div class="farm-specs">
+            <span class="spec-pill">ðŸŒ¾ {{ farm.areaInAcres }} Acres</span>
+            <span class="spec-pill">ðŸŒ± {{ farm.soilType }}</span>
+            <span class="spec-pill">ðŸ“œ {{ farm.ownershipType }}</span>
+          </div>
+          <div class="geo-coord">
+            GPS: {{ farm.latitude }}, {{ farm.longitude }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noFarms>
+      <div class="card empty-card" *ngIf="!showCreateFarm">
+        <p>No farms registered yet. Click <strong>+ Register New Farm</strong> to get started.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <div class="selected-farm-hub" *ngIf="selectedFarm$ | async as selectedFarm">
+    <div class="hub-header">
+      <h2 class="hub-title">Managing: {{ selectedFarm.farmName }} (Plot #{{ selectedFarm.farmId }})</h2>
+      <span class="hub-subtitle">Configure crop cultivation cycles and water infrastructure</span>
+    </div>
+
+    <app-crop-manager [farmId]="selectedFarm.farmId"></app-crop-manager>
+    <app-irrigation-form [farmId]="selectedFarm.farmId"></app-irrigation-form>
+  </div>
+</div>

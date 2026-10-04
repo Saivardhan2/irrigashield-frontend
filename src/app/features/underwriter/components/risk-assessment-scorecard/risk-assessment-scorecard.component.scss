@@ -1,0 +1,25 @@
+﻿.mb-4 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 0.25rem; }
+.risk-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  .summary-metric {
+    display: flex; flex-direction: column;
+    .label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+    .score-display {
+      display: flex; align-items: baseline; gap: 0.25rem;
+      .score-number { font-size: 2.25rem; font-weight: 800; color: var(--text-main); }
+      .score-total { font-size: 1rem; color: var(--text-muted); }
+    }
+    .val { font-size: 1.75rem; font-weight: 700; }
+    .text-primary { color: var(--primary-800); }
+    .text-accent { color: var(--accent-600); }
+  }
+}
+.factor-row {
+  display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 0; border-bottom: 1px solid var(--border-color);
+  &:last-child { border-bottom: none; }
+  .factor-info { display: flex; flex-direction: column; .factor-name { font-weight: 600; font-size: 0.95rem; } .factor-range { font-size: 0.78rem; color: var(--text-muted); } }
+  .factor-score { font-weight: 700; font-size: 1.1rem; color: var(--primary-900); }
+}

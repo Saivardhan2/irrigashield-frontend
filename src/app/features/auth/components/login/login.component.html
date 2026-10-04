@@ -1,0 +1,79 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-icon">🔐</span>
+      <h1 class="auth-title">Sign in to IrrigaShield</h1>
+      <p class="auth-subtitle">Parametric Irrigation & Crop Protection Platform</p>
+    </div>
+
+    <div *ngIf="error$ | async as error" class="auth-error-alert">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          id="email" 
+          type="email" 
+          class="form-control" 
+          formControlName="email"
+          placeholder="name@example.com"
+          [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+        />
+        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors" class="form-error">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          id="password" 
+          type="password" 
+          class="form-control" 
+          formControlName="password"
+          placeholder="••••••••"
+          [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+        />
+        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors" class="form-error">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-lg w-full"
+        [disabled]="(loading$ | async) || loginForm.invalid"
+      >
+        <span *ngIf="loading$ | async">Signing in...</span>
+        <span *ngIf="!(loading$ | async)">Sign In</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>New farmer on the platform?</span>
+      <a routerLink="/auth/register">Create a Farmer account</a>
+    </div>
+
+    <div class="demo-logins">
+      <div class="demo-title">Quick Demo Logins</div>
+      <div class="demo-buttons">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="fillDemo('admin@irrigashield.com', 'Admin12345')">
+          Admin
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="fillDemo('neha.underwriter@irrigashield.com', 'Password123')">
+          Underwriter
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="fillDemo('sensor.feed@irrigashield.com', 'Password123')">
+          IoT Feed
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="fillDemo('ramesh.kumar@example.com', 'Password123')">
+          Farmer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

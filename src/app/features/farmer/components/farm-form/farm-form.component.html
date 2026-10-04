@@ -1,0 +1,72 @@
+﻿<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Register Farm Plot</h2>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="cancel()">Close</button>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="farmForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="farmName">Farm Plot Name *</label>
+          <input id="farmName" type="text" class="form-control" formControlName="farmName" placeholder="Krishna Valley Farm" />
+        </div>
+        <div class="form-group">
+          <label for="surveyNumber">Survey Number *</label>
+          <input id="surveyNumber" type="text" class="form-control" formControlName="surveyNumber" placeholder="SY-88/1A" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="addressLine">Farm Address *</label>
+        <input id="addressLine" type="text" class="form-control" formControlName="addressLine" placeholder="Canal Road, Sector 3" />
+      </div>
+      <div class="grid grid-cols-4">
+        <div class="form-group">
+          <label for="village">Village *</label>
+          <input id="village" type="text" class="form-control" formControlName="village" placeholder="Baramati" />
+        </div>
+        <div class="form-group">
+          <label for="district">District *</label>
+          <input id="district" type="text" class="form-control" formControlName="district" placeholder="Pune" />
+        </div>
+        <div class="form-group">
+          <label for="state">State *</label>
+          <input id="state" type="text" class="form-control" formControlName="state" placeholder="Maharashtra" />
+        </div>
+        <div class="form-group">
+          <label for="postalCode">PIN Code *</label>
+          <input id="postalCode" type="text" class="form-control" formControlName="postalCode" placeholder="413102" />
+        </div>
+      </div>
+      <div class="grid grid-cols-3">
+        <div class="form-group">
+          <label for="areaInAcres">Area in Acres *</label>
+          <input id="areaInAcres" type="number" step="0.1" class="form-control" formControlName="areaInAcres" />
+        </div>
+        <div class="form-group">
+          <label for="soilType">Soil Type *</label>
+          <input id="soilType" type="text" class="form-control" formControlName="soilType" placeholder="Loamy Black" />
+        </div>
+        <div class="form-group">
+          <label for="ownershipType">Ownership *</label>
+          <select id="ownershipType" class="form-control" formControlName="ownershipType">
+            <option *ngFor="let ot of ownershipTypes" [value]="ot">{{ ot }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="latitude">GPS Latitude *</label>
+          <input id="latitude" type="number" step="0.0001" class="form-control" formControlName="latitude" />
+        </div>
+        <div class="form-group">
+          <label for="longitude">GPS Longitude *</label>
+          <input id="longitude" type="number" step="0.0001" class="form-control" formControlName="longitude" />
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="farmForm.invalid">Save Farm</button>
+      </div>
+    </form>
+  </div>
+</div>

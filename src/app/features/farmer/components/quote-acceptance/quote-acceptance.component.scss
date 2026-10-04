@@ -1,0 +1,10 @@
+﻿.quote-card { border-left: 4px solid var(--primary-600); margin-bottom: 2rem; }
+.quote-sub { font-size: 0.8rem; color: var(--text-muted); }
+.quote-grid { gap: 1.5rem; }
+.quote-metric {
+  display: flex; flex-direction: column;
+  .metric-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-val { font-size: 1.35rem; font-weight: 700; color: var(--text-main); }
+  .text-primary { color: var(--primary-800); }
+  .text-accent { color: var(--accent-600); }
+}

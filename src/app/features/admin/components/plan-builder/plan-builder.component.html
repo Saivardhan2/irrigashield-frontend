@@ -1,0 +1,99 @@
+﻿<div class="page-container">
+  <div class="card mb-4">
+    <div class="card-header flex justify-between items-center">
+      <div>
+        <h2 class="card-title">Parametric Insurance Plan Builder</h2>
+        <p class="text-muted">Create insurance plans, define risk trigger rules, and calibrate payout slabs.</p>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="toggleForm()">
+        {{ showForm ? 'Cancel' : '+ New Insurance Plan' }}
+      </button>
+    </div>
+
+    <div class="card-body" *ngIf="showForm">
+      <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="planName">Plan Name *</label>
+            <input id="planName" type="text" formControlName="planName" class="form-control" placeholder="Sugarcane Drought Shield" />
+          </div>
+
+          <div class="form-group span-2">
+            <label class="form-label" for="planDesc">Description *</label>
+            <input id="planDesc" type="text" formControlName="description" class="form-control" placeholder="Parametric deficit coverage for vegetative stage" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="minCov">Min Coverage (â‚¹) *</label>
+            <input id="minCov" type="number" formControlName="minimumCoverage" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="maxCov">Max Coverage (â‚¹) *</label>
+            <input id="maxCov" type="number" formControlName="maximumCoverage" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="basePrem">Base Premium (â‚¹) *</label>
+            <input id="basePrem" type="number" formControlName="basePremium" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="maxDays">Max Term (Days) *</label>
+            <input id="maxDays" type="number" formControlName="maximumPolicyDays" class="form-control" />
+          </div>
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="planForm.invalid">Publish Plan</button>
+          <button type="button" class="btn btn-outline" (click)="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Existing Plans</h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading$ | async" class="text-center py-4">
+        <p class="text-muted">Loading plans...</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="!(loading$ | async)">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Plan Name</th>
+              <th>Coverage Range</th>
+              <th>Base Premium</th>
+              <th>Term</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of (plans$ | async)">
+              <td>#{{ p.planId }}</td>
+              <td>
+                <strong>{{ p.planName }}</strong>
+                <div class="text-sm text-muted">{{ p.description }}</div>
+              </td>
+              <td>â‚¹{{ p.minimumCoverage | number }} - â‚¹{{ p.maximumCoverage | number }}</td>
+              <td>â‚¹{{ p.basePremium | number }}</td>
+              <td>{{ p.maximumPolicyDays }} days</td>
+              <td><span [appStatusBadge]="p.status">{{ p.status }}</span></td>
+              <td>
+                <a [routerLink]="['/admin/plans', p.planId, 'trigger-rules']" class="btn btn-sm btn-outline">
+                  Configure Triggers
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

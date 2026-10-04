@@ -1,0 +1,67 @@
+﻿<div class="irrigation-card card">
+  <div class="card-header">
+    <h3 class="card-title">Irrigation Infrastructure & Reliability Setup</h3>
+    <span class="badge badge-info">Required for Underwriting</span>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="irrigationForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="grid grid-cols-3">
+        <div class="form-group">
+          <label for="waterSource">Primary Water Source *</label>
+          <select id="waterSource" class="form-control" formControlName="waterSource">
+            <option *ngFor="let s of waterSources" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="irrigationMethod">Irrigation Method *</label>
+          <select id="irrigationMethod" class="form-control" formControlName="irrigationMethod">
+            <option *ngFor="let m of methods" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="equipmentCondition">Equipment Condition *</label>
+          <select id="equipmentCondition" class="form-control" formControlName="equipmentCondition">
+            <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-3">
+        <div class="form-group">
+          <label for="backupWaterSource">Backup Water Access *</label>
+          <select id="backupWaterSource" class="form-control" formControlName="backupWaterSource">
+            <option *ngFor="let b of backupSources" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="historicalFailureCount">Failures Past Year *</label>
+          <input id="historicalFailureCount" type="number" class="form-control" formControlName="historicalFailureCount" />
+        </div>
+        <div class="form-group">
+          <label for="averageWaterAvailabilityPercentage">Avg Water Avail % *</label>
+          <input id="averageWaterAvailabilityPercentage" type="number" step="0.1" class="form-control" formControlName="averageWaterAvailabilityPercentage" />
+        </div>
+      </div>
+      <div class="grid grid-cols-3">
+        <div class="form-group">
+          <label for="seasonalRisk">Seasonal Risk *</label>
+          <select id="seasonalRisk" class="form-control" formControlName="seasonalRisk">
+            <option *ngFor="let r of risks" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="maintenanceFrequency">Maintenance Frequency *</label>
+          <select id="maintenanceFrequency" class="form-control" formControlName="maintenanceFrequency">
+            <option *ngFor="let f of frequencies" [value]="f">{{ f }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="lastMaintenanceDate">Last Service Date *</label>
+          <input id="lastMaintenanceDate" type="date" class="form-control" formControlName="lastMaintenanceDate" />
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="irrigationForm.invalid">Save Irrigation Profile</button>
+      </div>
+    </form>
+  </div>
+</div>

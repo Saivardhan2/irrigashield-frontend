@@ -1,0 +1,136 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  <!-- Page Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Farmer Overview</h1>
+      <p class="text-sm text-slate-500 mt-1" *ngIf="profile$ | async as prof; else noProf">
+        Welcome back, <span class="font-semibold text-slate-700">{{ prof.fullName }}</span> ({{ prof.village }}, {{ prof.district }})
+      </p>
+      <ng-template #noProf>
+        <p class="text-sm text-slate-500 mt-1">Manage your registered farms, active policies, and automated payouts</p>
+      </ng-template>
+    </div>
+    <div class="flex flex-wrap items-center gap-2.5">
+      <a routerLink="/farmer/profile" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs" *ngIf="!(profile$ | async)">
+        Complete KYC Profile
+      </a>
+      <a routerLink="/farmer/farms" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs">
+        + Register Farm
+      </a>
+      <a routerLink="/farmer/plans" class="px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-sm shadow-emerald-600/25">
+        Explore Protection Plans
+      </a>
+    </div>
+  </div>
+
+  <!-- Metric / Stat Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4 hover:border-slate-300 transition">
+      <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 text-2xl flex items-center justify-center border border-emerald-100">
+        🚜
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Registered Farms</div>
+        <div class="text-2xl font-bold text-slate-900 tracking-tight">{{ (farms$ | async)?.length || 0 }}</div>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4 hover:border-slate-300 transition">
+      <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 text-2xl flex items-center justify-center border border-blue-100">
+        🛡️
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Active Policies</div>
+        <div class="text-2xl font-bold text-slate-900 tracking-tight">{{ (policies$ | async)?.length || 0 }}</div>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4 hover:border-slate-300 transition">
+      <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 text-2xl flex items-center justify-center border border-amber-100">
+        📋
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Applications</div>
+        <div class="text-2xl font-bold text-slate-900 tracking-tight">{{ (applications$ | async)?.length || 0 }}</div>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4 hover:border-slate-300 transition">
+      <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-700 text-2xl flex items-center justify-center border border-cyan-100">
+        💧
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Parametric Protection</div>
+        <div class="text-sm font-bold text-emerald-600 mt-1">24/7 Monitored</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard 2-column Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Active Policies Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="text-base font-bold text-slate-900">Active Protection Policies</h2>
+        <a routerLink="/farmer/policies" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">View All &rarr;</a>
+      </div>
+      <div class="p-6">
+        <ng-container *ngIf="(policies$ | async)?.length; else noPolicies">
+          <div class="divide-y divide-slate-100">
+            <div class="py-3.5 flex items-center justify-between first:pt-0 last:pb-0" *ngFor="let pol of policies$ | async">
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-800">{{ pol.planName }}</span>
+                <span class="text-xs text-slate-400 mt-0.5">{{ pol.startDate }} to {{ pol.endDate }}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-700">₹{{ pol.coverageAmount | number }}</span>
+                <span [appStatusBadge]="pol.status" class="text-xs font-semibold px-2 py-0.5 rounded-full">{{ pol.status }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noPolicies>
+          <div class="text-center py-8">
+            <div class="text-3xl mb-2">🛡️</div>
+            <p class="text-sm text-slate-500">No active insurance policies yet.</p>
+            <a routerLink="/farmer/plans" class="inline-block mt-3 px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-sm">
+              Subscribe to a Plan
+            </a>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Recent Applications Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="text-base font-bold text-slate-900">Recent Applications</h2>
+        <a routerLink="/farmer/applications" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">Manage &rarr;</a>
+      </div>
+      <div class="p-6">
+        <ng-container *ngIf="(applications$ | async)?.length; else noApps">
+          <div class="divide-y divide-slate-100">
+            <div class="py-3.5 flex items-center justify-between first:pt-0 last:pb-0" *ngFor="let app of applications$ | async">
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-800">Application #{{ app.applicationId }}</span>
+                <span class="text-xs text-slate-400 mt-0.5">Requested: ₹{{ app.requestedCoverage | number }}</span>
+              </div>
+              <div class="flex items-center">
+                <span [appStatusBadge]="app.status" class="text-xs font-semibold px-2 py-0.5 rounded-full">{{ app.status }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noApps>
+          <div class="text-center py-8">
+            <div class="text-3xl mb-2">📋</div>
+            <p class="text-sm text-slate-500">No submitted applications.</p>
+            <a routerLink="/farmer/plans" class="inline-block mt-3 px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-sm">
+              Apply for Policy
+            </a>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

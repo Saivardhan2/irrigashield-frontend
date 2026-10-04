@@ -1,0 +1,55 @@
+﻿<div class="container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Underwriting Queue</h1>
+      <p class="page-subtitle">Submitted farmer applications awaiting parametric risk assessment</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Pending Applications</h2>
+    </div>
+    <div class="card-body">
+      <ng-container *ngIf="queue$ | async as queue">
+        <div class="table-responsive" *ngIf="queue.length; else emptyQueue">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Farmer Email</th>
+                <th>Farm & Crop</th>
+                <th>Plan Name</th>
+                <th>Requested Coverage</th>
+                <th>Proposed Term</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of queue">
+                <td>#{{ item.applicationId }}</td>
+                <td>{{ item.farmerEmail }}</td>
+                <td>Plot #{{ item.farmId }} / Crop #{{ item.cropId }}</td>
+                <td><strong>{{ item.planName }}</strong></td>
+                <td>â‚¹{{ item.requestedCoverage | number }}</td>
+                <td>{{ item.proposedStartDate }} to {{ item.proposedEndDate }}</td>
+                <td><span [appStatusBadge]="item.applicationStatus">{{ item.applicationStatus }}</span></td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm" (click)="startReview(item)">
+                    Claim & Review
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyQueue>
+          <div class="empty-state">
+            <p>No pending applications in the underwriting queue.</p>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

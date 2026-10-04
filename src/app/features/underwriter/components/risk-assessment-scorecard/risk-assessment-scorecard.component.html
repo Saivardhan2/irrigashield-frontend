@@ -1,0 +1,150 @@
+﻿<div class="container">
+  <div class="page-header" *ngIf="activeCase$ | async as c">
+    <div>
+      <h1 class="page-title">Risk Assessment Scorecard: App #{{ c.applicationId }}</h1>
+      <p class="page-subtitle">{{ c.farmerEmail }} | {{ c.planName }}</p>
+    </div>
+    <div class="flex gap-1 items-center">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="runAssessment()" [disabled]="loading$ | async">
+        ðŸ”„ Re-run Risk Engine
+      </button>
+      <button type="button" class="btn btn-danger btn-sm" (click)="openDecision('REJECT')">
+        Reject Application
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="openDecision('APPROVE')">
+        Approve & Issue Quote
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="activeCase$ | async as c">
+    <!-- Overall Risk Gauge Card -->
+    <div class="card mb-4 risk-header-card">
+      <div class="risk-summary-grid">
+        <div class="summary-metric">
+          <span class="label">Total Risk Score</span>
+          <div class="score-display">
+            <span class="score-number">{{ c.overallRiskScore !== undefined ? c.overallRiskScore : '--' }}</span>
+            <span class="score-total">/ 100</span>
+          </div>
+        </div>
+
+        <div class="summary-metric">
+          <span class="label">Risk Classification</span>
+          <div class="mt-1">
+            <span [appRiskLevel]="c.riskLevel || 'LOW'">{{ c.riskLevel || 'NOT EVALUATED' }}</span>
+          </div>
+        </div>
+
+        <div class="summary-metric">
+          <span class="label">Risk Loading</span>
+          <span class="val text-accent">+â‚¹{{ c.riskLoading | number }}</span>
+        </div>
+
+        <div class="summary-metric">
+          <span class="label">Recommended Premium</span>
+          <span class="val text-primary">â‚¹{{ c.recommendedPremium | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5-Factor Risk Breakdown -->
+    <div class="grid grid-cols-2 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">5-Point Mathematical Factor Breakdown</h2>
+        </div>
+        <div class="card-body">
+          <div class="factor-row">
+            <div class="factor-info">
+              <span class="factor-name">1. Water Availability Telemetry</span>
+              <span class="factor-range">Threshold: Max 30 pts (Scores deficit history)</span>
+            </div>
+            <span class="factor-score">{{ c.waterAvailabilityScore || 0 }} / 30</span>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor-info">
+              <span class="factor-name">2. Equipment Condition</span>
+              <span class="factor-range">Good (0), Fair (10), Poor (20)</span>
+            </div>
+            <span class="factor-score">{{ c.equipmentConditionScore || 0 }} / 20</span>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor-info">
+              <span class="factor-name">3. Historical Equipment Failures</span>
+              <span class="factor-range">0 fails (0), 1-2 (10), >2 (20)</span>
+            </div>
+            <span class="factor-score">{{ c.historicalFailureScore || 0 }} / 20</span>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor-info">
+              <span class="factor-name">4. Seasonal Water Shortage Risk</span>
+              <span class="factor-range">Low (0), Med (10), High (15), V.High (20)</span>
+            </div>
+            <span class="factor-score">{{ c.seasonalRiskScore || 0 }} / 20</span>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor-info">
+              <span class="factor-name">5. Backup Water Access</span>
+              <span class="factor-range">Valid Canal/Borewell (0), None (10)</span>
+            </div>
+            <span class="factor-score">{{ c.backupSourceScore || 0 }} / 10</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Application Comparison -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Requested vs Recommended Quotation</h2>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Requested</th>
+                <th>Engine Recommended</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Coverage Amount</td>
+                <td>â‚¹{{ c.requestedCoverage | number }}</td>
+                <td><strong class="text-primary">â‚¹{{ c.recommendedCoverage | number }}</strong></td>
+              </tr>
+              <tr>
+                <td>Base Premium</td>
+                <td>--</td>
+                <td>â‚¹{{ c.basePremium | number }}</td>
+              </tr>
+              <tr>
+                <td>Calculated Premium</td>
+                <td>--</td>
+                <td><strong class="text-accent">â‚¹{{ c.recommendedPremium | number }}</strong></td>
+              </tr>
+              <tr>
+                <td>Term Duration</td>
+                <td>{{ c.proposedStartDate }} to {{ c.proposedEndDate }}</td>
+                <td>Approved Term</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Decision Modal -->
+  <app-decision-modal
+    *ngIf="showModal"
+    [applicationId]="applicationId"
+    [decisionType]="modalType"
+    (confirmed)="onDecisionConfirmed($event)"
+    (cancelled)="showModal = false"
+  ></app-decision-modal>
+</div>

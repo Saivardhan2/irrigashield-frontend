@@ -1,0 +1,47 @@
+﻿<div class="modal-backdrop" *ngIf="claim">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title">Parametric Payout Triggered!</h3>
+      <button type="button" class="btn-icon" (click)="close.emit()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert-banner alert-success mb-4">
+        IrrigaShield parametric smart-contract has detected an eligible drought condition and authorized your payout.
+      </div>
+
+      <div class="grid grid-2 gap-4">
+        <div>
+          <span class="text-muted block">Claim ID</span>
+          <strong>#{{ claim.claimId }}</strong>
+        </div>
+        <div>
+          <span class="text-muted block">Policy ID</span>
+          <strong>#{{ claim.policyId }}</strong>
+        </div>
+        <div>
+          <span class="text-muted block">Trigger Event</span>
+          <span>{{ claim.triggerEvent }}</span>
+        </div>
+        <div>
+          <span class="text-muted block">Payout Slab</span>
+          <span>{{ claim.payoutPercentage }}%</span>
+        </div>
+        <div>
+          <span class="text-muted block">Authorized Payout</span>
+          <span class="text-2xl font-bold text-success">â‚¹{{ claim.payoutAmount | number:'1.2-2' }}</span>
+        </div>
+        <div>
+          <span class="text-muted block">Status</span>
+          <span class="badge badge-success">{{ claim.status }}</span>
+        </div>
+      </div>
+
+      <p class="text-muted text-sm mt-4" *ngIf="claim.remarks">
+        {{ claim.remarks }}
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="close.emit()">Acknowledge & Close</button>
+    </div>
+  </div>
+</div>
