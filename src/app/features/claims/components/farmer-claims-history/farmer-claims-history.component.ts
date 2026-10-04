@@ -1,15 +1,16 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ClaimsActions } from '../../state/claims.actions';
 import { selectAllClaims, selectClaimsLoading, selectAlertClaim } from '../../state/claims.selectors';
+import { RouterModule } from '@angular/router';
 import { StatusBadgeDirective } from '../../../../shared/directives/status-badge.directive';
 import { ClaimAlertDialogComponent } from '../claim-alert-dialog/claim-alert-dialog.component';
 
 @Component({
   selector: 'app-farmer-claims-history',
   standalone: true,
-  imports: [CommonModule, StatusBadgeDirective, ClaimAlertDialogComponent],
+  imports: [CommonModule, RouterModule, StatusBadgeDirective, ClaimAlertDialogComponent],
   templateUrl: './farmer-claims-history.component.html',
   styleUrl: './farmer-claims-history.component.scss'
 })

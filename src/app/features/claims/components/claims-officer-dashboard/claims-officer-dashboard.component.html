@@ -1,0 +1,247 @@
+<div class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Claims Assessment & Settlement Console</h1>
+      <p class="page-subtitle">
+        Parametric deficit verification, sensor breach audit, and automated smart-contract disbursements
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="loadClaims()" [disabled]="loading">
+        <span *ngIf="loading">Refreshing...</span>
+        <span *ngIf="!loading">🔄 Refresh Claims</span>
+      </button>
+      <a routerLink="/sensor-simulator" class="btn btn-primary btn-sm">
+        📡 IoT Telemetry Simulator
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Stat Metrics -->
+  <div class="grid grid-cols-4 mb-4">
+    <div class="card metric-card">
+      <div class="text-xs text-muted font-bold uppercase tracking-wider">Total Claims</div>
+      <div class="metric-val text-primary">{{ totalClaimsCount }}</div>
+      <div class="text-xs text-muted mt-1">Evaluated across all policies</div>
+    </div>
+
+    <div class="card metric-card">
+      <div class="text-xs text-muted font-bold uppercase tracking-wider">Pending Settlement</div>
+      <div class="metric-val text-warning">{{ pendingClaimsCount }}</div>
+      <div class="text-xs text-muted mt-1">Breached thresholds awaiting payout</div>
+    </div>
+
+    <div class="card metric-card">
+      <div class="text-xs text-muted font-bold uppercase tracking-wider">Settled & Disbursed</div>
+      <div class="metric-val text-success">{{ settledClaimsCount }}</div>
+      <div class="text-xs text-muted mt-1">Completed parametric transfers</div>
+    </div>
+
+    <div class="card metric-card">
+      <div class="text-xs text-muted font-bold uppercase tracking-wider">Total Disbursed</div>
+      <div class="metric-val text-primary">₹{{ totalDisbursedAmount | number:'1.2-2' }}</div>
+      <div class="text-xs text-muted mt-1">Direct benefit transfer volume</div>
+    </div>
+  </div>
+
+  <!-- Filter & Actions Bar -->
+  <div class="card mb-4 filter-card">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div class="flex gap-2 filter-tabs">
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeFilter === 'ALL'"
+          (click)="activeFilter = 'ALL'">
+          All Claims ({{ totalClaimsCount }})
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeFilter === 'PENDING'"
+          (click)="activeFilter = 'PENDING'">
+          Action Required ({{ pendingClaimsCount }})
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeFilter === 'SETTLED'"
+          (click)="activeFilter = 'SETTLED'">
+          Settled ({{ settledClaimsCount }})
+        </button>
+      </div>
+
+      <div class="text-xs text-muted">
+        Showing <strong>{{ filteredClaims.length }}</strong> of {{ totalClaimsCount }} claims
+      </div>
+    </div>
+  </div>
+
+  <!-- Claims Table Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Parametric Breach & Settlement Queue</h2>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="loading" class="empty-state">
+        <div class="spinner mb-2"></div>
+        <p>Loading claims queue from API Gateway...</p>
+      </div>
+
+      <div *ngIf="!loading && filteredClaims.length === 0" class="empty-state">
+        <div class="text-3xl mb-2">📋</div>
+        <p class="font-bold text-main">No claims found in this category.</p>
+        <p class="text-muted text-xs mt-1">
+          When IoT telemetry records moisture deficit breaching contract thresholds, claims will appear here for settlement.
+        </p>
+      </div>
+
+      <div class="table-responsive" *ngIf="!loading && filteredClaims.length > 0">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Policy Ref</th>
+              <th>Telemetry Trigger Event</th>
+              <th>Payout Slab</th>
+              <th>Compensation</th>
+              <th>Status</th>
+              <th>Settled / Recorded At</th>
+              <th class="text-right">Settlement Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of filteredClaims">
+              <td>
+                <strong>#{{ c.claimId }}</strong>
+              </td>
+              <td>
+                <span class="badge badge-info">Policy #{{ c.policyId }}</span>
+              </td>
+              <td>
+                <div class="font-bold text-main">
+                  {{ c.triggerReason || c.triggerEvent || 'Severe Soil Deficit Breached' }}
+                </div>
+                <div class="text-xs text-muted mt-0.5" *ngIf="c.availabilityPercentage != null">
+                  Sensor Availability: <strong>{{ c.availabilityPercentage }}%</strong>
+                </div>
+                <div class="text-xs text-muted" *ngIf="c.remarks">{{ c.remarks }}</div>
+              </td>
+              <td>
+                <span class="font-bold text-accent">{{ c.payoutPercentage || 25 }}%</span>
+              </td>
+              <td>
+                <strong class="text-success text-base">
+                  ₹{{ ((c.compensationAmount != null ? c.compensationAmount : c.payoutAmount) || 0) | number:'1.2-2' }}
+                </strong>
+              </td>
+              <td>
+                <span 
+                  class="badge" 
+                  [ngClass]="isSettled(c) ? 'badge-success' : 'badge-warning'">
+                  {{ c.claimStatus || c.status || 'PENDING' }}
+                </span>
+              </td>
+              <td class="text-xs text-muted">
+                <div *ngIf="c.settledAt">
+                  <span>Disbursed:</span><br/>
+                  <strong>{{ c.settledAt | date:'medium' }}</strong>
+                </div>
+                <div *ngIf="!c.settledAt && c.recordedAt">
+                  <span>Recorded:</span><br/>
+                  {{ c.recordedAt | date:'medium' }}
+                </div>
+                <div *ngIf="!c.settledAt && !c.recordedAt">
+                  Awaiting Execution
+                </div>
+              </td>
+              <td class="text-right">
+                <div class="flex justify-end gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-secondary btn-sm"
+                    (click)="openAuditModal(c)">
+                    Audit
+                  </button>
+                  <button 
+                    *ngIf="!isSettled(c)"
+                    type="button" 
+                    class="btn btn-success btn-sm font-bold"
+                    [disabled]="settlingClaimId === c.claimId"
+                    (click)="settleClaim(c)">
+                    <span *ngIf="settlingClaimId === c.claimId">Settling...</span>
+                    <span *ngIf="settlingClaimId !== c.claimId">⚡ Settle</span>
+                  </button>
+                  <span *ngIf="isSettled(c)" class="text-xs text-success font-bold flex items-center gap-1">
+                    ✓ Paid
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Modal Dialog -->
+  <div class="modal-backdrop" *ngIf="selectedAuditClaim as claim">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Parametric Claim Audit - Claim #{{ claim.claimId }}</h3>
+        <button type="button" class="btn-close" (click)="closeAuditModal()">&times;</button>
+      </div>
+      <div class="modal-body space-y-4">
+        <div class="grid grid-cols-2 gap-3 bg-muted p-3 rounded">
+          <div>
+            <span class="text-muted block text-xs">Policy ID</span>
+            <strong>#{{ claim.policyId }}</strong>
+          </div>
+          <div>
+            <span class="text-muted block text-xs">Current Claim Status</span>
+            <span class="badge" [ngClass]="isSettled(claim) ? 'badge-success' : 'badge-warning'">
+              {{ claim.claimStatus || claim.status || 'PENDING' }}
+            </span>
+          </div>
+          <div>
+            <span class="text-muted block text-xs">Payout Slab Rate</span>
+            <strong>{{ claim.payoutPercentage || 25 }}% of Total Coverage</strong>
+          </div>
+          <div>
+            <span class="text-muted block text-xs">Settlement Compensation</span>
+            <strong class="text-success text-base">
+              ₹{{ ((claim.compensationAmount != null ? claim.compensationAmount : claim.payoutAmount) || 0) | number:'1.2-2' }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="border p-3 rounded">
+          <div class="text-xs font-bold text-muted uppercase mb-1">Telemetry Sensor Verification</div>
+          <p class="text-sm">
+            {{ claim.triggerReason || claim.triggerEvent || 'IoT soil moisture sensors recorded deficit breaching contractual threshold.' }}
+          </p>
+          <div class="text-xs text-muted mt-2" *ngIf="claim.recordedAt">
+            Sensor Reading Timestamp: <strong>{{ claim.recordedAt | date:'medium' }}</strong>
+          </div>
+          <div class="text-xs text-muted" *ngIf="claim.settledAt">
+            Payout Execution Timestamp: <strong>{{ claim.settledAt | date:'medium' }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer flex justify-between">
+        <button type="button" class="btn btn-secondary" (click)="closeAuditModal()">Close</button>
+        <button 
+          *ngIf="!isSettled(claim)"
+          type="button" 
+          class="btn btn-success" 
+          [disabled]="settlingClaimId === claim.claimId"
+          (click)="settleClaim(claim); closeAuditModal()">
+          Authorize & Disburse Settlement
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

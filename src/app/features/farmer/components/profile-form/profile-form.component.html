@@ -1,9 +1,9 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+<div class="container space-y-6">
   <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+  <div class="page-header">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Farmer KYC & Banking Profile</h1>
-      <p class="text-sm text-slate-500 mt-1">Verified identity and Direct Benefit Transfer (DBT) account for automated parametric drought payouts</p>
+      <h1 class="page-title">Farmer KYC & Banking Profile</h1>
+      <p class="page-subtitle">Verified identity and Direct Benefit Transfer (DBT) account for automated parametric drought payouts</p>
     </div>
     <div *ngIf="profile$ | async as prof" class="flex items-center gap-3">
       <span [appStatusBadge]="prof.verificationStatus" class="px-3 py-1 text-xs font-semibold rounded-full shadow-2xs">
@@ -13,7 +13,7 @@
         *ngIf="!isEditing" 
         type="button" 
         (click)="startEdit()"
-        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs"
+        class="btn btn-secondary btn-sm"
       >
         ✏️ Edit Profile
       </button>
@@ -23,46 +23,50 @@
   <!-- SHOWCASE VIEW (When Profile exists and user is NOT in edit mode) -->
   <div *ngIf="!isEditing && (profile$ | async) as prof" class="space-y-6">
     <!-- Verified Header Banner -->
-    <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
-      <div class="flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white font-black text-2xl flex items-center justify-center shadow-sm shadow-emerald-600/30">
-          {{ prof.fullName ? prof.fullName.charAt(0).toUpperCase() : 'F' }}
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h2 class="text-xl font-bold text-slate-900">{{ prof.fullName }}</h2>
-            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
-              ✓ KYC Active
-            </span>
+    <div class="card bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-emerald-200">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white font-black text-2xl flex items-center justify-center shadow-sm">
+            {{ prof.fullName ? prof.fullName.charAt(0).toUpperCase() : 'F' }}
           </div>
-          <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-2">
-            <span>📱 +91 {{ prof.phoneNumber }}</span>
-            <span>•</span>
-            <span>ID: #FAR-{{ prof.farmerId || '001' }}</span>
-          </p>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-bold text-slate-900">{{ prof.fullName }}</h2>
+              <span class="badge badge-success text-xs">
+                ✓ KYC Active
+              </span>
+            </div>
+            <p class="text-xs text-muted mt-1 flex flex-wrap items-center gap-2">
+              <span>📱 +91 {{ prof.phoneNumber }}</span>
+              <span>•</span>
+              <span>ID: #FAR-{{ prof.farmerId || '001' }}</span>
+              <span>•</span>
+              <span>📍 {{ prof.village }}, {{ prof.district }}</span>
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="flex flex-wrap gap-2.5">
-        <button 
-          type="button" 
-          (click)="startEdit()"
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-2xs"
-        >
-          Update Details
-        </button>
-        <a 
-          routerLink="/farmer/farms" 
-          class="px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-sm shadow-emerald-600/25"
-        >
-          View Registered Farms &rarr;
-        </a>
+        <div class="flex flex-wrap gap-2.5">
+          <button 
+            type="button" 
+            (click)="startEdit()"
+            class="btn btn-secondary btn-sm"
+          >
+            Update Details
+          </button>
+          <a 
+            routerLink="/farmer/farms" 
+            class="btn btn-primary btn-sm"
+          >
+            View Registered Farms &rarr;
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- 3-Column Detailed Information Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-3 mb-4">
       <!-- Card 1: Identity & Contact -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+      <div class="card flex flex-col justify-between">
         <div>
           <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 text-xl flex items-center justify-center mb-4">
             👤
@@ -88,7 +92,7 @@
       </div>
 
       <!-- Card 2: Farm Location -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+      <div class="card flex flex-col justify-between">
         <div>
           <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 text-xl flex items-center justify-center mb-4">
             📍
@@ -112,7 +116,7 @@
       </div>
 
       <!-- Card 3: Bank Account for Payouts -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+      <div class="card flex flex-col justify-between">
         <div>
           <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 text-xl flex items-center justify-center mb-4">
             🏦
@@ -134,7 +138,7 @@
     </div>
 
     <!-- Quick Navigation Hub -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="card flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="text-center sm:text-left">
         <h4 class="text-sm font-bold text-slate-900">Ready to secure your crops?</h4>
         <p class="text-xs text-slate-500 mt-0.5">Explore active parametric insurance plans or manage your plot irrigation telemetry.</p>

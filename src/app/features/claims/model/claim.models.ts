@@ -30,6 +30,7 @@ export interface ClaimResponse {
   claimId: number;
   policyId: number;
   triggerEvent?: string;
+  triggerReason?: string;
   availabilityPercentage?: number;
   payoutPercentage: number;
   payoutAmount?: number;

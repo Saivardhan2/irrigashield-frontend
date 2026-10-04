@@ -1,4 +1,4 @@
-export type ApplicationStatus = 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED';
+export type ApplicationStatus = 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED' | 'QUOTE_APPROVED' | 'POLICY_ACTIVE' | 'ACTIVE' | (string & {});
 export type PolicyStatus = 'ACTIVE' | 'EXPIRED' | 'CANCELLED';
 export type PaymentStatus = 'PAID' | 'PENDING' | 'FAILED';
 

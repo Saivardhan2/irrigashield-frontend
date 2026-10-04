@@ -32,7 +32,7 @@
                 <td>{{ item.farmerEmail }}</td>
                 <td>Plot #{{ item.farmId }} / Crop #{{ item.cropId }}</td>
                 <td><strong>{{ item.planName }}</strong></td>
-                <td>â‚¹{{ item.requestedCoverage | number }}</td>
+                <td>₹{{ item.requestedCoverage | number }}</td>
                 <td>{{ item.proposedStartDate }} to {{ item.proposedEndDate }}</td>
                 <td><span [appStatusBadge]="item.applicationStatus">{{ item.applicationStatus }}</span></td>
                 <td>

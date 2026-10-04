@@ -33,12 +33,12 @@
               <td>#{{ c.claimId }}</td>
               <td>#{{ c.policyId }}</td>
               <td>
-                <strong>{{ c.triggerEvent }}</strong>
+                <strong>{{ c.triggerReason || c.triggerEvent || 'Severe Soil Deficit Breached' }}</strong>
                 <div class="text-sm text-muted" *ngIf="c.remarks">{{ c.remarks }}</div>
               </td>
               <td>{{ c.payoutPercentage }}%</td>
-              <td class="font-bold text-success">â‚¹{{ c.payoutAmount | number:'1.2-2' }}</td>
-              <td><span [appStatusBadge]="c.status">{{ c.status }}</span></td>
+              <td class="font-bold text-success">₹{{ ((c.compensationAmount != null ? c.compensationAmount : c.payoutAmount) || 0) | number:'1.2-2' }}</td>
+              <td><span [appStatusBadge]="c.claimStatus || c.status">{{ c.claimStatus || c.status }}</span></td>
               <td>{{ c.settledAt ? (c.settledAt | date:'medium') : 'Processing' }}</td>
             </tr>
           </tbody>

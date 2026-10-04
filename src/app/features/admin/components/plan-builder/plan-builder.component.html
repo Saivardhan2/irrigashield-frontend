@@ -24,17 +24,17 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="minCov">Min Coverage (â‚¹) *</label>
+            <label class="form-label" for="minCov">Min Coverage (₹) *</label>
             <input id="minCov" type="number" formControlName="minimumCoverage" class="form-control" />
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="maxCov">Max Coverage (â‚¹) *</label>
+            <label class="form-label" for="maxCov">Max Coverage (₹) *</label>
             <input id="maxCov" type="number" formControlName="maximumCoverage" class="form-control" />
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="basePrem">Base Premium (â‚¹) *</label>
+            <label class="form-label" for="basePrem">Base Premium (₹) *</label>
             <input id="basePrem" type="number" formControlName="basePremium" class="form-control" />
           </div>
 
@@ -81,8 +81,8 @@
                 <strong>{{ p.planName }}</strong>
                 <div class="text-sm text-muted">{{ p.description }}</div>
               </td>
-              <td>â‚¹{{ p.minimumCoverage | number }} - â‚¹{{ p.maximumCoverage | number }}</td>
-              <td>â‚¹{{ p.basePremium | number }}</td>
+              <td>₹{{ p.minimumCoverage | number }} - ₹{{ p.maximumCoverage | number }}</td>
+              <td>₹{{ p.basePremium | number }}</td>
               <td>{{ p.maximumPolicyDays }} days</td>
               <td><span [appStatusBadge]="p.status">{{ p.status }}</span></td>
               <td>

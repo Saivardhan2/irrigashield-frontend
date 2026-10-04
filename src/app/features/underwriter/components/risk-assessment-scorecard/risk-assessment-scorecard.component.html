@@ -38,12 +38,12 @@
 
         <div class="summary-metric">
           <span class="label">Risk Loading</span>
-          <span class="val text-accent">+â‚¹{{ c.riskLoading | number }}</span>
+          <span class="val text-accent">+₹{{ c.riskLoading | number }}</span>
         </div>
 
         <div class="summary-metric">
           <span class="label">Recommended Premium</span>
-          <span class="val text-primary">â‚¹{{ c.recommendedPremium | number }}</span>
+          <span class="val text-primary">₹{{ c.recommendedPremium | number }}</span>
         </div>
       </div>
     </div>
@@ -114,18 +114,18 @@
             <tbody>
               <tr>
                 <td>Coverage Amount</td>
-                <td>â‚¹{{ c.requestedCoverage | number }}</td>
-                <td><strong class="text-primary">â‚¹{{ c.recommendedCoverage | number }}</strong></td>
+                <td>₹{{ c.requestedCoverage | number }}</td>
+                <td><strong class="text-primary">₹{{ c.recommendedCoverage | number }}</strong></td>
               </tr>
               <tr>
                 <td>Base Premium</td>
                 <td>--</td>
-                <td>â‚¹{{ c.basePremium | number }}</td>
+                <td>₹{{ c.basePremium | number }}</td>
               </tr>
               <tr>
                 <td>Calculated Premium</td>
                 <td>--</td>
-                <td><strong class="text-accent">â‚¹{{ c.recommendedPremium | number }}</strong></td>
+                <td><strong class="text-accent">₹{{ c.recommendedPremium | number }}</strong></td>
               </tr>
               <tr>
                 <td>Term Duration</td>

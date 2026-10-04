@@ -60,7 +60,7 @@ export class ClaimsEffects {
       switchMap(({ claimId }) =>
         this.claimsApi.settleClaim(claimId).pipe(
           map(claim => {
-            this.notification.showSuccess(`Claim #${claim.claimId} settled for â‚¹${claim.payoutAmount}.`);
+            this.notification.showSuccess(`Claim #${claim.claimId} settled for ₹${claim.payoutAmount}.`);
             return ClaimsActions.settleClaimSuccess({ claim });
           }),
           catchError(err => {
