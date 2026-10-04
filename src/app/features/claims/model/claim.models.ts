@@ -1,29 +1,45 @@
-﻿export interface IrrigationReadingRequest {
+export interface IrrigationReadingRequest {
   policyId: number;
-  readingTimestamp: string;
-  waterDeficitPercentage: number;
-  continuousDeficitHours: number;
-  soilMoisturePercentage: number;
+  availabilityPercentage?: number;
+  recordedAt?: string;
+  readingTimestamp?: string;
+  waterDeficitPercentage?: number;
+  continuousDeficitHours?: number;
+  soilMoisturePercentage?: number;
 }
 
 export interface IrrigationReadingResponse {
-  readingId: number;
+  readingId?: number;
   policyId: number;
-  readingTimestamp: string;
-  waterDeficitPercentage: number;
-  continuousDeficitHours: number;
-  soilMoisturePercentage: number;
-  processed: boolean;
+  availabilityPercentage?: number;
+  recordedAt?: string;
+  readingTimestamp?: string;
+  waterDeficitPercentage?: number;
+  continuousDeficitHours?: number;
+  soilMoisturePercentage?: number;
+  thresholdBreached?: boolean;
+  claimStatus?: string;
+  payoutStatus?: string;
+  payoutPercentage?: number;
+  compensationAmount?: number;
+  payoutAmount?: number;
+  processed?: boolean;
 }
 
 export interface ClaimResponse {
   claimId: number;
   policyId: number;
-  triggerEvent: string;
+  triggerEvent?: string;
+  availabilityPercentage?: number;
   payoutPercentage: number;
-  payoutAmount: number;
-  status: 'PENDING' | 'APPROVED' | 'SETTLED' | 'REJECTED';
+  payoutAmount?: number;
+  compensationAmount?: number;
+  status?: string;
+  claimStatus?: string;
+  payoutStatus?: string;
+  thresholdBreached?: boolean;
   settledAt?: string;
+  recordedAt?: string;
   remarks?: string;
   createdAt?: string;
 }

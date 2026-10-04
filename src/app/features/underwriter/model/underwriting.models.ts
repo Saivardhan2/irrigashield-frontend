@@ -1,4 +1,4 @@
-﻿export type RiskLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
+export type RiskLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH';
 
 export interface DecisionRequest {
   remarks: string;
