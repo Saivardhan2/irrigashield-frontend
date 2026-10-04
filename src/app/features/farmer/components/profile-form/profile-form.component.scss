@@ -1,1 +1,36 @@
-﻿.profile-card { max-width: 800px; margin: 0 auto; }
+:host {
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: #ffffff;
+  color: var(--text-main);
+  transition: all var(--transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-600);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+  }
+
+  &.is-invalid {
+    border-color: var(--status-danger);
+    background-color: #fffaf0;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+    }
+  }
+}
+
+.form-error {
+  font-size: 0.75rem;
+  color: var(--status-danger);
+  margin-top: 0.35rem;
+  font-weight: 500;
+}

@@ -1,14 +1,15 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FarmerProfileRequest, FarmerProfileResponse } from '../model/farmer.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FarmerProfileApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/farmers/profile';
+  private baseUrl = environment.farmerProfileUrl;
 
   createProfile(profile: FarmerProfileRequest): Observable<FarmerProfileResponse> {
     return this.http.post<FarmerProfileResponse>(this.baseUrl, profile);

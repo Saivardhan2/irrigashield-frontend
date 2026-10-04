@@ -79,6 +79,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/claims/components/sensor-simulator/sensor-simulator.component').then(m => m.SensorSimulatorComponent)
   },
   {
+    path: 'claims',
+    canActivate: [authGuard],
+    children: [
+      { path: 'history', redirectTo: '/farmer/claims', pathMatch: 'full' },
+      { path: 'simulator', redirectTo: '/sensor-simulator', pathMatch: 'full' }
+    ]
+  },
+  {
     path: 'admin',
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ADMIN'] },

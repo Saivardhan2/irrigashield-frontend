@@ -2,17 +2,14 @@
   <!-- Page Header -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Farmer Overview</h1>
-      <p class="text-sm text-slate-500 mt-1" *ngIf="profile$ | async as prof; else noProf">
-        Welcome back, <span class="font-semibold text-slate-700">{{ prof.fullName }}</span> ({{ prof.village }}, {{ prof.district }})
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Farmer Command Center</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Parametric drought protection, IoT telemetry monitoring, and automated smart-contract payouts
       </p>
-      <ng-template #noProf>
-        <p class="text-sm text-slate-500 mt-1">Manage your registered farms, active policies, and automated payouts</p>
-      </ng-template>
     </div>
     <div class="flex flex-wrap items-center gap-2.5">
-      <a routerLink="/farmer/profile" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs" *ngIf="!(profile$ | async)">
-        Complete KYC Profile
+      <a routerLink="/farmer/profile" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs">
+        KYC & Bank Profile
       </a>
       <a routerLink="/farmer/farms" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs">
         + Register Farm
@@ -22,6 +19,56 @@
       </a>
     </div>
   </div>
+
+  <!-- Prominent KYC Banner -->
+  <ng-container *ngIf="profile$ | async as prof; else kycMissing">
+    <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200/80 rounded-2xl p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white font-bold text-lg flex items-center justify-center shadow-xs">
+          {{ prof.fullName ? prof.fullName.charAt(0).toUpperCase() : 'F' }}
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-900">{{ prof.fullName }}</span>
+            <span class="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+              ✓ KYC Verified
+            </span>
+          </div>
+          <div class="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-2">
+            <span>📍 {{ prof.village }}, {{ prof.district }} ({{ prof.state }})</span>
+            <span>•</span>
+            <span>📱 +91 {{ prof.phoneNumber }}</span>
+            <span>•</span>
+            <span>🏦 Payout Bank: •••• {{ prof.bankAccountLastFour }}</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <a routerLink="/farmer/profile" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition shadow-2xs">
+          View KYC Profile &rarr;
+        </a>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #kycMissing>
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-start gap-3.5">
+        <div class="text-2xl mt-0.5">⚠️</div>
+        <div>
+          <h2 class="text-sm font-bold text-amber-900">Complete Your Farmer KYC & Bank Profile</h2>
+          <p class="text-xs text-amber-700 mt-0.5">
+            To apply for parametric crop insurance policies and enable automated deficit settlements, verify your identity and bank details.
+          </p>
+        </div>
+      </div>
+      <div>
+        <a routerLink="/farmer/profile" class="inline-block px-4 py-2 text-xs font-semibold rounded-xl bg-amber-600 hover:bg-amber-700 text-white transition shadow-sm shadow-amber-600/25 text-center">
+          Complete KYC Profile Now &rarr;
+        </a>
+      </div>
+    </div>
+  </ng-template>
 
   <!-- Metric / Stat Cards -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

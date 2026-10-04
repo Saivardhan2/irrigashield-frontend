@@ -1,4 +1,4 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { 
@@ -7,13 +7,14 @@ import {
   PolicyApplicationResponse, 
   PolicyResponse 
 } from '../model/application.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FarmerPolicyApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = environment.apiGatewayUrl;
 
   getActivePlans(): Observable<InsurancePlanResponse[]> {
     return this.http.get<InsurancePlanResponse[]>(`${this.baseUrl}/plans/active`);

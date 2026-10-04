@@ -1,16 +1,17 @@
-﻿import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FarmRequest, FarmResponse } from '../model/farm.models';
 import { CropRequest, CropResponse } from '../model/crop.models';
 import { IrrigationProfileRequest, IrrigationProfileResponse } from '../model/irrigation.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FarmApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/farms';
+  private baseUrl = environment.farmsUrl;
 
   createFarm(farm: FarmRequest): Observable<FarmResponse> {
     return this.http.post<FarmResponse>(this.baseUrl, farm);

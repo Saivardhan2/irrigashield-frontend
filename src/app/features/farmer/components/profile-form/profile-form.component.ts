@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -6,12 +6,13 @@ import { FarmerActions } from '../../state/farmer.actions';
 import { selectFarmerProfile, selectFarmerLoading } from '../../state/farmer.selectors';
 import { indianPhoneValidator } from '../../../../shared/validators/phone.validator';
 import { pinCodeValidator } from '../../../../shared/validators/pin-code.validator';
+import { RouterLink } from '@angular/router';
 import { StatusBadgeDirective } from '../../../../shared/directives/status-badge.directive';
 
 @Component({
   selector: 'app-profile-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, StatusBadgeDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, StatusBadgeDirective],
   templateUrl: './profile-form.component.html',
   styleUrl: './profile-form.component.scss'
 })
@@ -21,6 +22,7 @@ export class ProfileFormComponent implements OnInit {
 
   profile$ = this.store.select(selectFarmerProfile);
   loading$ = this.store.select(selectFarmerLoading);
+  isEditing = false;
 
   profileForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -36,7 +38,8 @@ export class ProfileFormComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(FarmerActions.loadProfile());
     this.profile$.subscribe(prof => {
-      if (prof) {
+      if (prof && prof.fullName) {
+        this.isEditing = false;
         this.profileForm.patchValue({
           fullName: prof.fullName,
           phoneNumber: prof.phoneNumber,
@@ -47,13 +50,24 @@ export class ProfileFormComponent implements OnInit {
           postalCode: prof.postalCode,
           bankAccountLastFour: prof.bankAccountLastFour
         });
+      } else {
+        this.isEditing = true;
       }
     });
+  }
+
+  startEdit(): void {
+    this.isEditing = true;
+  }
+
+  cancelEdit(): void {
+    this.isEditing = false;
   }
 
   onSubmit(): void {
     if (this.profileForm.valid) {
       this.store.dispatch(FarmerActions.saveProfile({ profile: this.profileForm.value }));
+      this.isEditing = false;
     } else {
       this.profileForm.markAllAsTouched();
     }
